@@ -1,20 +1,46 @@
-import * as THREE from 'three';
+import * as THREE from "three";
+import { color } from "three/tsl";
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
 
 const renderer = new THREE.WebGLRenderer();
-renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.setSize(window.innerWidth, window.innerHeight);
 
-document.body.appendChild( renderer.domElement );
+document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.BoxGeometry( 1, 1, 1 );
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
 
-camera.position.z = 5;
+
+/* const geometry = new THREE.BoxGeometry(1, 1, 1);
+const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube); */
+/* 
+camera.position.z = 5; */
+
+/* Create a Spere */
+/* Sphere takes 3 arguments 1) radius, 2) how many width segment we want within our sphere, 3) Materiul */
+const sphere = new THREE.Mesh(new THREE.SphereGeometry(5, 50, 50), new THREE.MeshBasicMaterial({
+  /* color: 0xFF0000 */
+  map: new THREE.TextureLoader().load('./assets/uv_globe.jpg')
+}));
+/* console.log(sphere); */
+
+scene.add(sphere);
+camera.position.z = 10;
+
 function animate() {
-  renderer.render( scene, camera );
+/*   cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01; */
+
+
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
 }
-renderer.setAnimationLoop( animate );
+/* renderer.setAnimationLoop(animate); */
+animate();
