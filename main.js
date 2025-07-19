@@ -1,5 +1,10 @@
 import * as THREE from "three";
 import { color } from "three/tsl";
+import vertexShader from "./shaders/vertex.glsl";
+import fragmentShader from "./shaders/fragemt.glsl";
+
+/* console.log(vertexShader); */
+/* console.log(fragmentShader); */
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -27,9 +32,12 @@ camera.position.z = 5; */
 /* Sphere takes 3 arguments 1) radius, 2) how many width segment we want within our sphere, 3) Materiul */
 const sphere = new THREE.Mesh(
   new THREE.SphereGeometry(5, 50, 50),
-  new THREE.MeshBasicMaterial({
+  /*  We are gonna use our own shader instead of the basicmesh: MeshBasicMaterial */
+  new THREE.ShaderMaterial({
     /* color: 0xFF0000 */
-    map: new THREE.TextureLoader().load("./assets/uv_globe2.jpg"),
+    /* map: new THREE.TextureLoader().load("./assets/uv_globe2.jpg"), */
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
   })
 );
 /* console.log(sphere); */
