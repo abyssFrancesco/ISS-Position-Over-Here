@@ -9,12 +9,12 @@ const camera = new THREE.PerspectiveCamera(
   1000
 );
 
-const renderer = new THREE.WebGLRenderer();
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+/* Make it sharper */
+renderer.setPixelRatio(Window.devicePixelRatio);
 
 document.body.appendChild(renderer.domElement);
-
-
 
 /* const geometry = new THREE.BoxGeometry(1, 1, 1);
 const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -25,19 +25,21 @@ camera.position.z = 5; */
 
 /* Create a Spere */
 /* Sphere takes 3 arguments 1) radius, 2) how many width segment we want within our sphere, 3) Materiul */
-const sphere = new THREE.Mesh(new THREE.SphereGeometry(5, 50, 50), new THREE.MeshBasicMaterial({
-  /* color: 0xFF0000 */
-  map: new THREE.TextureLoader().load('./assets/uv_globe.jpg')
-}));
+const sphere = new THREE.Mesh(
+  new THREE.SphereGeometry(5, 50, 50),
+  new THREE.MeshBasicMaterial({
+    /* color: 0xFF0000 */
+    map: new THREE.TextureLoader().load("./assets/uv_globe2.jpg"),
+  })
+);
 /* console.log(sphere); */
 
 scene.add(sphere);
-camera.position.z = 10;
+camera.position.z = 15;
 
 function animate() {
-/*   cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01; */
-
+  /*  sphere.rotation.x += 0.01; */
+  /*  sphere.rotation.y += 0.01;  */
 
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
