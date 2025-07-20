@@ -5,6 +5,7 @@ import vertexShader from "./shaders/vertex.glsl";
 import fragmentShader from "./shaders/fragemt.glsl";
 import atmosphereVertexShader from "./shaders/atmosphereVertex.glsl";
 import atmosphereFragmentShader from "./shaders/atmosphereFragment.glsl";
+import { Float32BufferAttribute } from "three/webgpu";
 
 /* console.log(vertexShader); */
 /* console.log(fragmentShader); */
@@ -63,6 +64,25 @@ const atmosphere = new THREE.Mesh(
     side: THREE.BackSide,
   })
 );
+/* making the stars */
+const starGeometry = new THREE.BufferGeometry();
+const starMaterial = new THREE.PointsMaterial({
+  color: 0xffffff,
+});
+const starVerticies = [];
+for (let i = 0; i < 10000; i++) {
+  const x = (Math.random() - 0.5) * 2000;
+  const y = (Math.random() - 0.5) * 2000;
+  const z = -Math.random() * 5000;
+  starVerticies.push(x, y, z);
+}
+/* console.log(starVerticies); */
+// you give the position to the star geometry which is starVerticies and u convert it into a float 32 attribute to have 30000 stars
+starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVerticies, 3));
+const stars = new THREE.Points(starGeometry, starMaterial);
+/* console.log(stars); */
+scene.add(stars);
+
 /* console.log(sphere); */
 /* Movimento del muose normalizzando il valore della posizione del mouse sullo schermo, quindi invece di ricevere 0 to innerwidht & innerheight */
 const mouse = {
@@ -80,15 +100,17 @@ camera.position.z = 15;
 
 function animate() {
   /* sphere.rotation.x += 0.01; */
-  sphere.rotation.y += 0.001;
+  sphere.rotation.y += 0.003;
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
   /*  group.rotation.y = mouse.x * 0.5; */
   /* group.rotation.x = mouse.y * 0.5; */
   /* We use gsap to interpolate the animation */
   gsap.to(group.rotation, {
-    y: mouse.y * 0.5,
-    x: mouse.x * 0.5,
+    //three js mouse moves inverse to a normal mouse
+    y: mouse.y * 0.3,
+    x: -mouse.x * 0.5,
+    duration: 2,
   });
 }
 /* renderer.setAnimationLoop(animate); */
