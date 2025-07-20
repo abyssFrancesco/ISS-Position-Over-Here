@@ -1,7 +1,10 @@
 import * as THREE from "three";
+import gsap from "gsap";
 import { color } from "three/tsl";
 import vertexShader from "./shaders/vertex.glsl";
 import fragmentShader from "./shaders/fragemt.glsl";
+import atmosphereVertexShader from "./shaders/atmosphereVertex.glsl";
+import atmosphereFragmentShader from "./shaders/atmosphereFragment.glsl";
 
 /* console.log(vertexShader); */
 /* console.log(fragmentShader); */
@@ -38,19 +41,61 @@ const sphere = new THREE.Mesh(
     /* map: new THREE.TextureLoader().load("./assets/uv_globe2.jpg"), */
     vertexShader: vertexShader,
     fragmentShader: fragmentShader,
+    uniforms: {
+      globeTexture: {
+        value: new THREE.TextureLoader().load("./assets/uv_globe2.jpg"),
+      },
+    },
   })
 );
 /* console.log(sphere); */
 
-scene.add(sphere);
+/* scene.add(sphere); */
+
+/* Create anothere sphere to make an atmosphere */
+const atmosphere = new THREE.Mesh(
+  new THREE.SphereGeometry(5, 50, 50),
+  new THREE.ShaderMaterial({
+    vertexShader: atmosphereVertexShader,
+    fragmentShader: atmosphereFragmentShader,
+    blending: THREE.AdditiveBlending,
+    /* shadow on the backside */
+    side: THREE.BackSide,
+  })
+);
+/* console.log(sphere); */
+/* Movimento del muose normalizzando il valore della posizione del mouse sullo schermo, quindi invece di ricevere 0 to innerwidht & innerheight */
+const mouse = {
+  x: undefined,
+  y: undefined,
+};
+atmosphere.scale.set(1.1, 1.1, 1.1);
+scene.add(atmosphere);
+//crete a group to put in different stuff
+const group = new THREE.Group();
+group.add(sphere);
+scene.add(group);
+
 camera.position.z = 15;
 
 function animate() {
-  /*  sphere.rotation.x += 0.01; */
-  /*  sphere.rotation.y += 0.01;  */
-
+  /* sphere.rotation.x += 0.01; */
+  sphere.rotation.y += 0.001;
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
+  /*  group.rotation.y = mouse.x * 0.5; */
+  /* group.rotation.x = mouse.y * 0.5; */
+  /* We use gsap to interpolate the animation */
+  gsap.to(group.rotation, {
+    y: mouse.y * 0.5,
+    x: mouse.x * 0.5,
+  });
 }
 /* renderer.setAnimationLoop(animate); */
 animate();
+
+addEventListener("mousemove", () => {
+  mouse.x = (event.clientX / innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / innerHeight) * 2 + 1;
+  console.log(mouse);
+});
